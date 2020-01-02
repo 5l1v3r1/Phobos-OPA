@@ -1,35 +1,30 @@
 import os
 import webbrowser #just for help to redirect to github project page
 from sys import platform #avoid error(s) on unsupported commands
+import subprocess
+import requests, zipfile, io
 
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import *
 from os import path
 from tkinter import ttk
-import tkinter.messagebox 
+import tkinter.messagebox
 
 import argparse
 
 #setting up the whole gui properties
 root = tk.Tk()
 root.title("Phobos - OPA v.1.1")
-root.geometry('760x350')
+root.geometry('750x450')
 root.iconbitmap('Phobos_Logo.ico')
 root.resizable(0,0)
 i = tk.IntVar()
 str = StringVar()
-#end of the gui properties
-
+current_version = 1.13
+#end of the gui propertie
 #print the welcoming message in the terminal/cmd
-banner = """██████╗ ██╗  ██╗ ██████╗ ██████╗  ██████╗ ███████╗               ██████╗ ██████╗  █████╗ 
-██╔══██╗██║  ██║██╔═══██╗██╔══██╗██╔═══██╗██╔════╝              ██╔═══██╗██╔══██╗██╔══██╗
-██████╔╝███████║██║   ██║██████╔╝██║   ██║███████╗    █████╗    ██║   ██║██████╔╝███████║
-██╔═══╝ ██╔══██║██║   ██║██╔══██╗██║   ██║╚════██║    ╚════╝    ██║   ██║██╔═══╝ ██╔══██║
-██║     ██║  ██║╚██████╔╝██████╔╝╚██████╔╝███████║              ╚██████╔╝██║     ██║  ██║
-╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝               ╚═════╝ ╚═╝     ╚═╝  ╚═╝
-                                                                                          """
-print(banner)
+
 print("Welcome to PHOBO - OPA, a GUI Software specifically made for Oracle Padding Attacks. Because the Software is still on development, all the output of the processes will be displayed here, so please don't close this window, as it may crash the program.")
 
 #license
@@ -51,8 +46,98 @@ def documentation():
     tkinter.messagebox.showinfo("Phobos OPA - Documentation & License", document_license)
 
 def help():
-    url = "https://github.com/TheBrowserPirates/Phobos-OPA/wiki"
+    url = "https://github.com/thebrowserpirates/phobos-opa"
     webbrowser.open(url,new=1)
+
+def encoder():
+    root1 = tk.Tk()
+    root1.title("Phobo OPA - Encoder")
+    root1.geometry('800x600')
+    root1.iconbitmap('Phobos_Logo.ico')
+    root1.resizable(0,0)
+    vbose = tk.IntVar()
+    verbosing = ""
+ 
+    def encode_entry():
+        if vbose.get() == 1:
+            verbosing = " -v"
+        elif vbose.get() == 0:
+            verbosing = ""
+
+        if platform == "linux" or platform == "linux2":
+            os.system("chmod +x test.py")
+            encode_command = "./test.py -m " + decoder_entry.get() + verbosing
+            if decoder_entry.get() == "":
+                tkinter.messagebox.showwarning("Phobos OPA - Error Warning Message", "Please enter a value of Decoder!")
+            else:
+                os.system(encode_command)
+        elif platform == "win32":
+            encode_command = "py test.py -m " + decoder_entry.get() + verbosing
+            if decoder_entry.get() == "":
+                tkinter.messagebox.showwarning("Phobos OPA - Error Warning Message", "Please enter a value of Decoder!")
+            else:
+                print(encode_command)
+                #os.system(encode_command)
+    
+
+    root1_frame = LabelFrame(root1, text="Tutorial")
+    root1_frame.place(x=0, y=0)
+
+    root1_frame2 = LabelFrame(root1, text="Message:")
+    root1_frame2.place(x=0, y=40)
+
+    root1_frame3 = LabelFrame(root1, text="Output:")
+    root1_frame3.place(x=0, y=85)
+
+    verbose_checkbox = tk.Checkbutton(root1_frame2, text="Verbose", variable=vbose)
+    verbose_checkbox.grid(row=0, column=1)
+   
+    tutorial_label = tk.Label(root1_frame, text="This tab is used to find the hash using a message. Using this technique, you don't need any remote server (or a website to deal with).")
+    tutorial_label.grid(row=0, column=0)
+
+    decoder_entry= tk.Entry(root1_frame2, width=74)
+    decoder_entry.grid(row=0, column=0)
+
+    encode_button = tk.Button(root1_frame2, text = 'Encode', command=encode_entry)
+    encode_button.grid(row=0, column=2)
+
+    output_box = Text(root1_frame3, width=80, height=25)
+    output_box.grid(row=0, column=0)
+
+#---------------------------------------------------------------------------------------------------------
+
+def oracle_customise():
+    root3 = tk.Tk()
+    root3.title("Phobo OPA - Developer Mode")
+    root3.geometry('800x600')
+    root3.iconbitmap('Phobos_Logo.ico')
+    root3.resizable(0,0)
+
+    #all functions for this window
+
+    def apply_code():
+        developer_code = oracle_box.get()
+        print(developer_code)
+        os.system(developer_code)
+
+    #end of functions for this window
+
+    root3_frame = LabelFrame(root3, text="Developer Mode")
+    root3_frame.place(x=0, y=0)
+
+    root3_frame1 = LabelFrame(root3, text="Ready?")
+    root3_frame1.place(x=1, y=550)
+
+    text_clarification = tk.Label(root3_frame, text="This section is adapted for the ones who wants to modify the script, to adapt the output, depending the situation you are facing with.")
+    text_clarification.grid(row=0, column=0)
+
+    oracle_box = Text(root3_frame, width=99, height=31)
+    oracle_box.grid(row=1, column=0)
+
+    attack_button = tk.Button(root3_frame1, text="Apply Code", command=apply_code)
+    attack_button.grid(row=0, column=0)
+
+#---------------------------------------------------------------------------------------------------------
 
 def delete_entries():
     urltarget_entry.delete(0,END)
@@ -60,11 +145,56 @@ def delete_entries():
     cipher_entry.delete(0, END)
     length_block_cipher_entry.delete(0, END)
     cookie_entry.delete(0, END)
-    command_output.delete(0, END)
     error_entry.delete(0, END)
+    script_output.delete('1.0', END)
+    command_output.delete(0, END)
+
+def save():
+    outputfile = open("password cracked.txt","w")
+    outputfile.write("HERE WRITE SOMETHING")
+    outputfile.close()
+    input("Password saved! Search for <password cracked.txt> in LazyBruter Folder")
+
+    #save to is currently being developed
+def save_to():
+    output_save = filedialog.askdirectory(initialdir = "/", title = "Select file")
+    if output_save is None:
+        return
+    print(output_save)
+    filepath1 = os.path.join(output_save, 'Phobos-Output.txt')
+    file_save_to = open(filepath1, "w")
+    file_save_to.write("HERE WRITE THE OUTPUT")
+    file_save_to.close()
+
+def check_update():
+    version_file = open('version.txt', mode='r')
+    old_version = float(version_file.read())
+    version_file.close()
+
+    version_request = requests.get("https://raw.githubusercontent.com/TheBrowserPirates/Phobos-OPA/master/version.txt")
+    new_version = float(version_request.content)
+
+    if old_version >= new_version:
+        tkinter.messagebox.showinfo("Check for update", "No need to update, you are using the latest version.")
+    if old_version < new_version:
+        update = tkinter.messagebox.askquestion("Check for update", "There is a newer version, do you want to update?")
+        if update == 'yes':
+            if platform == "linux" or platform == "linux2":
+                tkinter.messagebox.showinfo("Update", "The software will begin to update, please be patient.")
+                current_path = os.getcwd()
+                os.system("git clone https://github.com/TheBrowserPirates/Phobos-OPA.git")
+                tkinter.messagebox.showinfo("Successful update", "Software successfuly updated, please restart the application.")
+            if platform == "win32":
+                current_directory = os.getcwd()  
+                request = requests.get("https://github.com/TheBrowserPirates/Phobos-OPA/archive/master.zip")
+                zip_file = zipfile.ZipFile(io.BytesIO(request.content))
+                zip_file.extractall(current_directory)
+                tkinter.messagebox.showinfo("Successful update", "File successfuly extracted in: " + current_directory)
+                tkinter.messagebox.showinfo("Successful update", "Software successfuly updated, please restart the application.")
 
 def begin():
     command_output.delete(0, END)
+    script_output.delete('1.0', END)
     #setting up some conditions in case some entries are blank
     #first condiditon for verbose
     if verbose_check.get() == 1:
@@ -72,29 +202,46 @@ def begin():
     if verbose_check.get() == 0:
         verbose = ""
 #condition for error since its not required 
+#input filters so user can input the right values for each entry
+    if host_entry.get() == "":
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "Please insert a valid value of Host!")
+
+    if "http://" not in host_entry.get() and "https://" not in host_entry.get() and "." not in host_entry.get():
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "The Host must start with [http://] or [https://]!")
+
+    if urltarget_entry.get() == "":
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "Please insert a valid value of Directory!")
+
+    if "/" not in urltarget_entry.get() and "." not in urltarget_entry.get() and "?" not in urltarget_entry.get() and "=" not in urltarget_entry.get():
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "Please insert a valid value of Directory including [/]")
+
+    if cipher_entry.get() == "":
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "Please insert a valid value of Cipher!")
+
+    if length_block_cipher_entry.get() == "": 
+        tkinter.messagebox.showwarning("Phobos OPA - Error Warning", "Please insert a valid value of Cookie Length and make sure it is an integer!")
+
     if error_entry.get() == "":
         error = ""
     else:
         error = " --error " + error_entry.get()
 #condition for radiobutton to check the selected http methods
-    if i.get() == 1:
-        method = "GET"
-    if i.get() == 2:
-        method = "HEAD"
-    if i.get() == 3:
-        method = "POST"
-    if i.get() == 4:
-        method = "PUT"
-    if i.get() == 5:
-        method = "DELETE"
-    if i.get() == 6:
-        method = "CONNECT"
-    if i.get() == 7:
-        method = "OPTIONS"
-    if i.get() == 8:
-        method = "TRACE"
-    if i.get() == "":
-        method = "GET"
+    if i.get() == "GET":
+        method = " --method GET"
+    if i.get() == "HEAD":
+        method = " --method HEAD"
+    if i.get() == "PORT":
+        method = " --post POST"
+    if i.get() == "PUT":
+        method = " --method PUT"
+    if i.get() == "DELETE":
+        method = " --method DELETE"
+    if i.get() == "CONNECT":
+        method = " --method CONNECT"
+    if i.get() == "OPTIONS":
+        method = " --method OPTIONS"
+    if i.get() == "TRACE":
+        method = " --method TRACE"
 
 #condiditon for cookie since its not required
     if cookie_entry.get() == "":
@@ -105,17 +252,30 @@ def begin():
 #define the system to execute the proper command
     if platform == "linux" or platform == "linux2":
         os.system("chmod +x exploit.py")
-        command = "./exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + "--method " + method
+        command = "./exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
+        command_textbox = os.system(command)
+        os.system(command)
+        return command_output.split("\n")[-1]
+        command_textbox.insert(0, command)
+        script_output.insert('1.0',command_textbox)
+
     elif platform == "win32":
-        command = "py exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + "--method " + method
-    try:
-        command_output.insert(0,command)
-    except:
-        command_output.insert(0, "ERROR")
-    os.system(command)
+        command = "py exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
+        command_textbox = os.system(command)
+        os.system(command)
+        #return command_output.split("\n")[-1]
+        command_output.insert(0, command)
+        script_output.insert('1.0',command_textbox)
 
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Encoder", command=encoder)
+filemenu.add_command(label="Developer Mode", command=oracle_customise, state=DISABLED)
+filemenu.add_command(label="Save", command=save)
+filemenu.add_command(label="Save to...", command=save_to)
+filemenu.add_command(label="Clear all", command=delete_entries)
+filemenu.add_separator()
+filemenu.add_command(label="Check for update", command=check_update)
 filemenu.add_command(label="Exit", command=quit)
 menubar.add_cascade(label="Main", menu=filemenu)
 
@@ -123,17 +283,20 @@ menubar.add_cascade(label="Main", menu=filemenu)
 frame1 = LabelFrame(root, text="Required Entries")
 frame1.place(x=180, y=0)
 
-frame2 = LabelFrame(root, text="Optional Entires")
+frame2 = LabelFrame(root, text="Optional Entries")
 frame2.place(x=180, y=135)
 
 frame3 = LabelFrame(root, text="HTTP Method")
-frame3.place(x=180, y=185)
+frame3.place(x=500, y=130)
 
-frame4 = LabelFrame(root, text="Output")
-frame4.place(x=180, y=260)
+frame4 = LabelFrame(root, text="Command Output")
+frame4.place(x=180, y=185)
 
 frame5 = LabelFrame(root, text="")
 frame5.place(x=0, y=0)
+
+frame6 = LabelFrame(root, text="Script Result")
+frame6.place(x=180, y=240)
 
 #help menu
 helpmenu = Menu(menubar, tearoff=0)
@@ -179,35 +342,19 @@ cookie_entry= tk.Entry(frame2, width=40)
 cookie_entry.grid(row=0, column=1)
 
 #creating all the radiobuttons for HTTP Methods
-get = tk.Radiobutton(frame3, text="GET", value=1, variable=i)
-get.grid(row=0, column=0)
-
-head = tk.Radiobutton(frame3, text="HEAD", value=2, variable=i)
-head.grid(row=0, column=1)
-
-post = tk.Radiobutton(frame3, text="POST", value=3, variable=i)
-post.grid(row=0, column=2)
-#post.config(state='disabled')
-
-put = tk.Radiobutton(frame3, text="PUT", value=4, variable=i)
-put.grid(row=0, column=3)
-
-delete = tk.Radiobutton(frame3, text="DELETE", value=5, variable=i)
-delete.grid(row=1, column=0)
-
-connect = tk.Radiobutton(frame3, text="CONNECT", value=6, variable=i)
-connect.grid(row=1, column=1)
-
-options = tk.Radiobutton(frame3, text="OPTIONS", value=7, variable=i)
-options.grid(row=1, column=2)
-
-trace = tk.Radiobutton(frame3, text="TRACE", value=8, variable=i)
-trace.grid(row=1, column=3)
+i = StringVar()
+i.set("GET")
+method_option = OptionMenu(frame3, i, "GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE")
+method_option.grid(row=0, column=0)
 
 #optinal commands (verbose checkmark)
 verbose_check = IntVar()
-verbose = tk.Checkbutton(frame4, text=" Verbose", variable=verbose_check)
+verbose = tk.Checkbutton(frame4, text="Verbose", variable=verbose_check)
 verbose.grid(row=0, column=1)
+
+#output textbox
+script_output = Text(frame6, width=69, height=10)
+script_output.grid(row=1, column=0)
 
 #output display
 command = StringVar() 
@@ -224,6 +371,9 @@ delete_button.grid(row=0, column=3)
 phobos_wallpaper = PhotoImage(file="Phobos_Wallpaper.png")
 wallpaper_label = Label(frame5, image=phobos_wallpaper)
 wallpaper_label.grid(row=0, column=0)
+
+credential_label = tk.Label(frame5, text="\n \n \n \n \n \nTheBrowserPirates (C) 2019")
+credential_label.grid(row=2, column=0)
 
 #end of script to configure all the script
 root.config(menu=menubar)
