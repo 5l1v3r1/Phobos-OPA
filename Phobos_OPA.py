@@ -1,4 +1,5 @@
-import os
+import os #run some commands
+from subprocess import * #capture the output of a command and print it into the GUI
 import webbrowser #just for help to redirect to github project page
 from sys import platform #avoid error(s) on unsupported commands
 import subprocess
@@ -71,14 +72,16 @@ def encoder():
                 tkinter.messagebox.showwarning("Phobos OPA - Error Warning Message", "Please enter a value of Decoder!")
             else:
                 os.system(encode_command)
+                final_encode_command = subprocess.run(encode_command, capture_output=True)
+                output_box.insert('1.0',final_encode_command)
         elif platform == "win32":
             encode_command = "py test.py -m " + decoder_entry.get() + verbosing
             if decoder_entry.get() == "":
                 tkinter.messagebox.showwarning("Phobos OPA - Error Warning Message", "Please enter a value of Decoder!")
             else:
-                print(encode_command)
-                #os.system(encode_command)
-    
+                os.system(encode_command)
+                final_encode_command = subprocess.run(encode_command, capture_output=True)
+                output_box.insert('1.0',final_encode_command)
 
     root1_frame = LabelFrame(root1, text="Tutorial")
     root1_frame.place(x=0, y=0)
@@ -150,8 +153,8 @@ def delete_entries():
     command_output.delete(0, END)
 
 def save():
-    outputfile = open("password cracked.txt","w")
-    outputfile.write("HERE WRITE SOMETHING")
+    outputfile = open("Phobos-autosave.txt","w")
+    outputfile.write(final_command)
     outputfile.close()
     input("Password saved! Search for <password cracked.txt> in LazyBruter Folder")
 
@@ -253,19 +256,15 @@ def begin():
     if platform == "linux" or platform == "linux2":
         os.system("chmod +x exploit.py")
         command = "./exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
-        command_textbox = os.system(command)
         os.system(command)
-        return command_output.split("\n")[-1]
-        command_textbox.insert(0, command)
-        script_output.insert('1.0',command_textbox)
+        final_command = subprocess.run(command, capture_output=True)
+        script_output.insert('1.0',final_command)
 
     elif platform == "win32":
         command = "py exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
-        command_textbox = os.system(command)
         os.system(command)
-        #return command_output.split("\n")[-1]
-        command_output.insert(0, command)
-        script_output.insert('1.0',command_textbox)
+        final_command = subprocess.run(command, capture_output=True)
+        script_output.insert('1.0',final_command)
 
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
