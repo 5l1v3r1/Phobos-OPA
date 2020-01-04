@@ -8,7 +8,7 @@ Phobos-OPA is a GUI Software created specifically for Oracle Pattern Attack. Thi
 Oracle Pattern Attack is an exploitation which a low-privileged user can manipulate and change "cookie" into a role that he wants.
 
 ## Version
-Phobos - OPA is currently running on v1.1, but we are improving day by day.
+Phobos - OPA is currently running on v1.3, but we are improving day by day.
 
 ## Question/suggestion?
 Email me on kurtikleiton@gmail.com
