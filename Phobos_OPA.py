@@ -152,23 +152,6 @@ def delete_entries():
     script_output.delete('1.0', END)
     command_output.delete(0, END)
 
-def save():
-    outputfile = open("Phobos-autosave.txt","w")
-    outputfile.write(final_command)
-    outputfile.close()
-    input("Password saved! Search for <password cracked.txt> in LazyBruter Folder")
-
-    #save to is currently being developed
-def save_to():
-    output_save = filedialog.askdirectory(initialdir = "/", title = "Select file")
-    if output_save is None:
-        return
-    print(output_save)
-    filepath1 = os.path.join(output_save, 'Phobos-Output.txt')
-    file_save_to = open(filepath1, "w")
-    file_save_to.write("HERE WRITE THE OUTPUT")
-    file_save_to.close()
-
 def check_update():
     version_file = open('version.txt', mode='r')
     old_version = float(version_file.read())
@@ -258,20 +241,20 @@ def begin():
         command = "./exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
         os.system(command)
         final_command = subprocess.run(command, capture_output=True)
+        command_output.insert(0, command)
         script_output.insert('1.0',final_command)
 
     elif platform == "win32":
         command = "py exploit.py -c " + cipher_entry.get() + " -l " + length_block_cipher_entry.get() + " --host " + host_entry.get() + " -u " + urltarget_entry.get() + cookie + error + verbose + method
         os.system(command)
         final_command = subprocess.run(command, capture_output=True)
+        command_output.insert(0, command)
         script_output.insert('1.0',final_command)
 
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Encoder", command=encoder)
 filemenu.add_command(label="Developer Mode", command=oracle_customise, state=DISABLED)
-filemenu.add_command(label="Save", command=save)
-filemenu.add_command(label="Save to...", command=save_to)
 filemenu.add_command(label="Clear all", command=delete_entries)
 filemenu.add_separator()
 filemenu.add_command(label="Check for update", command=check_update)
