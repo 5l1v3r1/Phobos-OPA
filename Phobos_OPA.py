@@ -47,7 +47,7 @@ def documentation():
     tkinter.messagebox.showinfo("Phobos OPA - Documentation & License", document_license)
 
 def help():
-    url = "https://github.com/thebrowserpirates/phobos-opa"
+    url = "https://github.com/kleiton0x00/phobos-opa"
     webbrowser.open(url,new=1)
 
 def encoder():
@@ -157,7 +157,7 @@ def check_update():
     old_version = float(version_file.read())
     version_file.close()
 
-    version_request = requests.get("https://raw.githubusercontent.com/TheBrowserPirates/Phobos-OPA/master/version.txt")
+    version_request = requests.get("https://raw.githubusercontent.com/kleiton0x00/Phobos-OPA/master/version.txt")
     new_version = float(version_request.content)
 
     if old_version >= new_version:
@@ -168,11 +168,11 @@ def check_update():
             if platform == "linux" or platform == "linux2":
                 tkinter.messagebox.showinfo("Update", "The software will begin to update, please be patient.")
                 current_path = os.getcwd()
-                os.system("git clone https://github.com/TheBrowserPirates/Phobos-OPA.git")
+                os.system("git clone https://github.com/kleiton0x00/Phobos-OPA.git")
                 tkinter.messagebox.showinfo("Successful update", "Software successfuly updated, please restart the application.")
             if platform == "win32":
                 current_directory = os.getcwd()  
-                request = requests.get("https://github.com/TheBrowserPirates/Phobos-OPA/archive/master.zip")
+                request = requests.get("https://github.com/kleiton0x00/Phobos-OPA/archive/master.zip")
                 zip_file = zipfile.ZipFile(io.BytesIO(request.content))
                 zip_file.extractall(current_directory)
                 tkinter.messagebox.showinfo("Successful update", "File successfuly extracted in: " + current_directory)
@@ -354,7 +354,7 @@ phobos_wallpaper = PhotoImage(file="Phobos_Wallpaper.png")
 wallpaper_label = Label(frame5, image=phobos_wallpaper)
 wallpaper_label.grid(row=0, column=0)
 
-credential_label = tk.Label(frame5, text="\n \n \n \n \n \nTheBrowserPirates (C) 2019")
+credential_label = tk.Label(frame5, text="\n \n \n \n \n \nKleiton Kurti (C) 2019")
 credential_label.grid(row=2, column=0)
 
 #end of script to configure all the script
